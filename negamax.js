@@ -1,5 +1,3 @@
-const transpositionTable = new Map();
-
 const calculateSingleHands = new Map();
 for (let i of [1, 2, 3, 4]) {
   for (let j of [1, 2, 3, 4]) {
@@ -30,7 +28,14 @@ function playHands(i, j) {
   }
 }
 
-export default function negamax(node, depth, alpha, beta, color) {
+export default function negamax(
+  node,
+  depth,
+  alpha,
+  beta,
+  color,
+  transpositionTable
+) {
   let alphaOrig = alpha;
 
   let ttEntry = transpositionTable.get(getKey(node)) || {};
@@ -48,21 +53,24 @@ export default function negamax(node, depth, alpha, beta, color) {
   }
 
   if (depth === 0 || isTerminal(node)) {
-    console.log(
-      `checking endpoint node ${JSON.stringify(
-        node
-      )} color ${color}... returning ${heuristicValue(node, color)}`
-    );
+    // console.log(
+    //   `checking endpoint node ${JSON.stringify(
+    //     node
+    //   )} color ${color}... returning ${heuristicValue(node, color)}`
+    // );
     return heuristicValue(node, color);
   }
 
   const childNodes = generateMoves(node, color);
   let value = -Infinity;
   for (let child of childNodes) {
-    value = Math.max(value, -negamax(child, depth - 1, -beta, -alpha, -color));
+    value = Math.max(
+      value,
+      -negamax(child, depth - 1, -beta, -alpha, -color, transpositionTable)
+    );
     alpha = Math.max(alpha, value);
     if (alpha >= beta) {
-      console.log("breaking on alpha/beta");
+      // console.log("breaking on alpha/beta");
       break;
     }
   }
