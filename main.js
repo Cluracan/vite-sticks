@@ -6,8 +6,6 @@ const transpositionTable = new Map();
 
 const gameContent = document.getElementById("content");
 
-gameContent.innerText = "TESTING testing";
-
 console.log(
   negamax(
     [
