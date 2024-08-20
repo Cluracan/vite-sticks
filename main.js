@@ -1,10 +1,10 @@
 import "./style.css";
-
+import { Game } from "./game.js";
 import negamax from "./negamax.js";
 
 const transpositionTable = new Map();
 
-const gameContent = document.getElementById("content");
+const game = new Game([1, 1], [2, 4], [3, 2]);
 
 console.log(
   negamax(

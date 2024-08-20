@@ -126,12 +126,40 @@ ul {
   justify-content: center;
 }
 
-#computer-player {
-  height: 20vh;
+#computer-hands,
+#player-hands {
+  height: 32vh;
+  width: 40vw;
+  display: flex;
+  justify-content: space-between;
 }
 
-#human-player {
-  height: 20vh;
+#player-hands {
+  align-items: end;
+}
+
+#player-left,
+#player-right,
+#computer-left,
+#computer-right {
+  height: 30vh;
+  cursor: pointer;
+}
+
+#computer-left {
+  transform: scale(1, -1);
+}
+
+#computer-right {
+  transform: scale(-1, -1);
+}
+
+#player-right {
+  transform: scale(-1, 1);
+}
+
+#tap-text {
+  text-align: center;
 }
 
 #scores {
