@@ -1,6 +1,11 @@
 import { Display } from "./display";
 import negamax from "./negamax";
 
+const startingHands = {
+  computer: [1, 1],
+  player: [1, 1],
+};
+
 export class Game {
   constructor(computerHands, playerHands, score, transpositionTable, depth) {
     this.computerHands = computerHands;
@@ -53,25 +58,30 @@ export class Game {
     this.clearHandSelect();
     this.clearTapText();
     this.updateDisplay();
-    //computer move
-    const computerMove = await this.chooseMove();
-    console.log(computerMove);
-    this.selectHand("computer", computerMove.sourceIndex);
-    tapValue = this.getTapValue(this.computerHands);
-    await this.showTapText("computer", tapValue);
-    await this.selectHand("player", computerMove.targetIndex, 2000);
-    await this.updateHandValue(
-      this.playerHands,
-      computerMove.targetIndex,
-      tapValue
-    );
-    this.clearHandSelect();
-    this.clearTapText();
-    this.updateDisplay();
+    if (this.winCheck()) {
+      this.handleWin("player");
+    } else {
+      //computer move
+      const computerMove = await this.chooseMove();
+      this.selectHand("computer", computerMove.sourceIndex);
+      tapValue = computerMove.sourceValue;
+      await this.showTapText("computer", tapValue);
+      await this.selectHand("player", computerMove.targetIndex, 2000);
+      await this.updateHandValue(
+        this.playerHands,
+        computerMove.targetIndex,
+        tapValue
+      );
+      this.clearHandSelect();
+      this.clearTapText();
+      this.updateDisplay();
+      if (this.winCheck()) {
+        this.handleWin("computer");
+      }
+    }
   }
 
-  //player turn
-
+  //Game helper functions
   async selectHand(target, index, sleep = 0) {
     if (target === "computer") {
       this.computerHands[index].selected = true;
@@ -127,6 +137,28 @@ export class Game {
     this.display.gameScreenElements.tapText.textContent = "";
   }
 
+  winCheck() {
+    return (
+      this.computerHands.every((hand) => hand.value === 0) ||
+      this.playerHands.every((hand) => hand.value === 0)
+    );
+  }
+
+  async handleWin(target) {
+    await new Promise((resolve) => {
+      this.display.gameScreenElements.tapText.textContent = `${
+        target === "computer" ? "The computer has" : " You have"
+      } won!`;
+      this.score[target]++;
+      this.updateScore();
+      setTimeout(() => {
+        this.clearTapText();
+        this.restartGame();
+        resolve();
+      }, 2000);
+    });
+  }
+
   //computer turn
   chooseMove() {
     return new Promise((resolve) => {
@@ -141,8 +173,18 @@ export class Game {
         let playerInput = this.playerHands
           .map((hand) => hand.value)
           .filter((value) => value != 0);
-
+        console.log(
+          `computer filters ${JSON.stringify(
+            this.computerHands
+          )} into ${JSON.stringify(computerInput)}`
+        );
         computerInput.forEach((sourceValue) => {
+          console.log(`here: ${sourceValue}`);
+        });
+        computerInput.forEach((sourceValue, index, array) => {
+          console.log(
+            `trying ${sourceValue} ${index} ${JSON.stringify(array)}`
+          );
           playerInput.forEach((targetValue, targetIndex, targetArray) => {
             let newPlayerInput = targetArray.slice();
             newPlayerInput[targetIndex] = (targetValue + sourceValue) % 5;
@@ -155,7 +197,7 @@ export class Game {
               )} to get ${JSON.stringify(newPlayerInput)}`
             );
             let evaluateMove = -negamax(
-              [newPlayerInput, computerInput],
+              [newPlayerInput, computerInput.slice()],
               this.depth,
               -Infinity,
               Infinity,
@@ -169,6 +211,7 @@ export class Game {
             }
           });
         });
+        console.log(computerInput);
         console.log(`best move is ${JSON.stringify(bestMove)}`);
         let sourceValue = bestMove.sourceValue;
         let sourceIndex = this.computerHands.findIndex(
@@ -184,16 +227,30 @@ export class Game {
     });
   }
 
+  //Menu helper functions
   handleDepthChange(depth) {
     this.display.gameScreenElements.depthSlider.value = 2;
     this.display.gameScreenElements.depthValue.textContent = 2;
   }
 
   restartGame() {
-    console.log("restarting");
+    this.computerHands.forEach(
+      (hand, index) => (hand.value = startingHands.computer[index])
+    );
+    this.playerHands.forEach(
+      (hand, index) => (hand.value = startingHands.player[index])
+    );
+    this.updateDisplay();
   }
 
   updateDisplay() {
     this.display.refreshHands(this.computerHands, this.playerHands);
+  }
+
+  //ScoreBoard functions
+  updateScore() {
+    this.display.gameScreenElements.computerScore.textContent =
+      this.score.computer;
+    this.display.gameScreenElements.playerScore.textContent = this.score.player;
   }
 }

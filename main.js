@@ -13,7 +13,7 @@ const game = new Game(
     { value: 1, selected: false },
     { value: 2, selected: false },
   ],
-  [3, 2],
+  { computer: 3, player: 2 },
   transpositionTable,
   10
 );

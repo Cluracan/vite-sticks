@@ -53,11 +53,6 @@ export default function negamax(
   }
 
   if (depth === 0 || isTerminal(node)) {
-    // console.log(
-    //   `checking endpoint node ${JSON.stringify(
-    //     node
-    //   )} color ${color}... returning ${heuristicValue(node, color)}`
-    // );
     return heuristicValue(node, color);
   }
 

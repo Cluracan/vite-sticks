@@ -56,12 +56,18 @@ export class Display {
     const restart = document.getElementById("restart");
     restart.addEventListener("click", (e) => game.restartGame());
 
+    //Scoreboard
+    const computerScore = document.getElementById("computer-score");
+    const playerScore = document.getElementById("player-score");
+
     return {
       computerElements,
       playerElements,
       tapText,
       depthSlider,
       depthValue,
+      computerScore,
+      playerScore,
     };
   }
 
