@@ -43,7 +43,8 @@ export class Display {
     });
 
     const tapText = document.getElementById("tap-text");
-    tapText.textContent = "Testing tap info";
+
+    const dialog = document.querySelector("dialog");
 
     //Menu Options
     const depthSlider = document.getElementById("depth-slider");
@@ -53,12 +54,28 @@ export class Display {
 
     const depthValue = document.getElementById("depth-value");
 
+    const speedSlider = document.getElementById("speed-slider");
+    speedSlider.addEventListener("change", (e) =>
+      game.handleSpeedChange(e.target.value)
+    );
+
+    const speedValue = document.getElementById("depth-value");
+
     const restart = document.getElementById("restart");
     restart.addEventListener("click", (e) => game.restartRound());
 
     const reset = document.getElementById("reset");
     reset.addEventListener("click", (e) => game.resetRound());
 
+    const about = document.getElementById("about");
+    about.addEventListener("click", (e) => {
+      dialog.showModal();
+    });
+
+    const closeDialog = document.getElementById("close-dialog");
+    closeDialog.addEventListener("click", (e) => {
+      dialog.close();
+    });
     //Scoreboard
     const computerScore = document.getElementById("computer-score");
     const playerScore = document.getElementById("player-score");
@@ -69,6 +86,8 @@ export class Display {
       tapText,
       depthSlider,
       depthValue,
+      speedSlider,
+      speedValue,
       computerScore,
       playerScore,
     };

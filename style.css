@@ -51,6 +51,7 @@ ul {
 }
 
 #depth,
+#speed,
 #restart,
 #reset,
 #about {
@@ -72,25 +73,34 @@ ul {
   top: 12rem;
 }
 
-#depth-slider {
+#menu:hover > #speed {
+  color: inherit;
+  display: flex;
+  top: 16rem;
+}
+#depth-slider,
+#speed-slider {
   margin: 0 20px;
   visibility: hidden;
   opacity: 0;
   transition: opacity 250ms ease-in;
 }
 
-#depth-value {
+#depth-value,
+#speed-value {
   visibility: hidden;
   opacity: 0;
   transition: opacity 250ms ease-in;
 }
 
-#depth:hover > #depth-slider {
+#depth:hover > #depth-slider,
+#speed:hover > #speed-slider {
   visibility: visible;
   opacity: 1;
 }
 
-#depth:hover > #depth-value {
+#depth:hover > #depth-value,
+#speed:hover > #speed-value {
   visibility: visible;
   opacity: 1;
 }
@@ -98,22 +108,23 @@ ul {
 #menu:hover > #restart {
   color: inherit;
   display: flex;
-  top: 16rem;
+  top: 20rem;
 }
 
 #menu:hover > #reset {
   color: inherit;
   display: flex;
-  top: 20rem;
+  top: 24rem;
 }
 
 #menu:hover > #about {
   color: inherit;
   display: flex;
-  top: 24rem;
+  top: 28rem;
 }
 
 #depth:hover,
+#speed:hover,
 #restart:hover,
 #reset:hover,
 #about:hover {
@@ -201,4 +212,21 @@ ul {
 
 #right-content span {
   padding: 1rem;
+}
+
+/* ------------------
+  Dialog
+--------------------*/
+a {
+  border: none;
+}
+::backdrop {
+  background: radial-gradient(
+    circle at 100%,
+    #333,
+    #333 50%,
+    #eee 75%,
+    #333 75%
+  );
+  opacity: 0.85;
 }

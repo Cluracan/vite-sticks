@@ -8,7 +8,7 @@
   </head>
   <body>
     <div id="left-content">
-
+      
       <nav id="menu">
         <ul id="depth">
           <label for="depth-slider">Depth</label>
@@ -23,6 +23,19 @@
           />
           <output id="depth-value">5</output>
         </ul>
+        <ul id="speed">
+          <label for="speed-slider">Speed</label>
+          <input
+          id="speed-slider"
+          type="range"
+          name="speed"
+          min="1"
+          max="10"
+          value="5"
+          oninput="this.nextElementSibling.value = this.value"
+          />
+          <output id="speed-value">5</output>
+        </ul>
         <ul id="restart">
           Restart round
         </ul>
@@ -35,14 +48,14 @@
         <img id="marvin" src="/marvin.svg" />
       </nav>
     </div>
-
+    
     <div id="content">
       <div id="game-board">
         <div id="computer-hands">
           <img id="computer-left" ></img>
           <img id="computer-right" ></img>
         </div>
-        <div id="tap-text">You tap for 2</div>
+        <div id="tap-text"></div>
         <div id="player-hands">
           <img id="player-left"></img>
           <img id="player-right"></img>
@@ -50,10 +63,22 @@
       </div>
     </div>
     <div id="right-content">
-      <div><span class="score-name">Computer</span><span id="computer-score">3</span> </div>
-      <div><span class="score-name">Player</span><span id="player-score">1</span></div>
+      <div><span class="score-name">Computer</span><span id="computer-score">0</span> </div>
+      <div><span class="score-name">Player</span><span id="player-score">0</span></div>
     </div>
-
+    <dialog>
+      <h1>Sticks</h1>
+      <p>This is a hand game for two players.</p>
+    <p>Click first on one of your hands, then one of your opponent's to add an amount to their hand.</p>
+    <p>Finger addition is modulo 5.  The aim is to reduce both opponent hands to zero.</p>
+    <p>The computer uses a variation of the minimax algorithm to select a move (Negamax)</p><br>
+    <p>Depth: This is the number of moves the computer will 'look ahead' in its search</p>
+    <p>Speed: The delay between moves/animation </p>
+    <p>Restart round: Maintains scores but restarts current play.</p>
+    <p>Reset game: Resets scores as well as the current play.</p>
+    <button id="close-dialog" focus>Close</button>
+    </dialog>
     <script type="module" src="/main.js"></script>
   </body>
-</html>
+  </html>
+  
