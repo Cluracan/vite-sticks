@@ -7,10 +7,12 @@
     <title>Vite Sticks</title>
   </head>
   <body>
-    <nav id="menu">
-      <ul id="depth">
-        <label for="depth-slider">Depth</label>
-        <input
+    <div id="left-content">
+
+      <nav id="menu">
+        <ul id="depth">
+          <label for="depth-slider">Depth</label>
+          <input
           id="depth-slider"
           type="range"
           name="depth"
@@ -18,17 +20,18 @@
           max="10"
           value="5"
           oninput="this.nextElementSibling.value = this.value"
-        />
-        <output id="depth-value">5</output>
-      </ul>
-      <ul id="restart">
-        Restart
-      </ul>
-      <ul id="about">
-        About
-      </ul>
-      <img id="marvin" src="/marvin.svg" />
-    </nav>
+          />
+          <output id="depth-value">5</output>
+        </ul>
+        <ul id="restart">
+          Restart
+        </ul>
+        <ul id="about">
+          About
+        </ul>
+        <img id="marvin" src="/marvin.svg" />
+      </nav>
+    </div>
 
     <div id="content">
       <div id="game-board">
@@ -42,7 +45,10 @@
           <img id="player-right"></img>
         </div>
       </div>
-      <div id="scores">scores</div>
+    </div>
+    <div id="right-content">
+      <div><span class="score-name">Computer</span><span id="computer-score">3</span> </div>
+      <div><span class="score-name">Player</span><span id="player-score">1</span></div>
     </div>
 
     <script type="module" src="/main.js"></script>

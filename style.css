@@ -31,6 +31,10 @@ body {
 /* ------------------
   Dropdown Menu
 --------------------*/
+#left-content {
+  width: 30vw;
+}
+
 #menu {
   width: 12rem;
   display: flex;
@@ -112,7 +116,7 @@ ul {
 --------------------*/
 
 #content {
-  width: 100%;
+  width: fit-content;
   display: flex;
   flex-direction: column;
 
@@ -120,7 +124,7 @@ ul {
 }
 
 #game-board {
-  height: 80vh;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -144,6 +148,7 @@ ul {
 #computer-right {
   height: 30vh;
   cursor: pointer;
+  -webkit-user-drag: none;
 }
 
 #computer-left {
@@ -160,8 +165,31 @@ ul {
 
 #tap-text {
   text-align: center;
+  height: 1rem;
 }
 
-#scores {
-  height: 20vh;
+#computer-hands .selected {
+  margin-bottom: -10px;
+}
+
+#player-hands .selected {
+  margin-bottom: 10px;
+}
+
+/* ------------------
+  Scoreboard
+--------------------*/
+
+#right-content {
+  width: 30vw;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  font-size: 2rem;
+}
+
+#right-content span {
+  padding: 1rem;
 }
