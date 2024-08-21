@@ -6,7 +6,7 @@ const startingHands = {
   player: [1, 1],
 };
 
-const startingDelayMultiplier = 1200;
+const startingDelay = 1000;
 
 export class Game {
   constructor(computerHands, playerHands, score, transpositionTable, depth) {
@@ -16,7 +16,7 @@ export class Game {
     this.display = new Display(this);
     this.transpositionTable = transpositionTable;
     this.depth = depth;
-    this.delay = startingDelayMultiplier;
+    this.delay = startingDelay;
   }
 
   handleSelectHand(event) {
@@ -236,8 +236,11 @@ export class Game {
 
   //Menu helper functions
   handleDepthChange(depth) {
-    this.display.gameScreenElements.depthSlider.value = 2;
-    this.display.gameScreenElements.depthValue.textContent = 2;
+    this.depth = depth;
+  }
+
+  handleSpeedChange(speed) {
+    this.delay = (10 - speed) * 200;
   }
 
   restartRound() {
@@ -247,6 +250,7 @@ export class Game {
     this.playerHands.forEach(
       (hand, index) => (hand.value = startingHands.player[index])
     );
+    this.clearHandSelect();
     this.updateDisplay();
   }
 
