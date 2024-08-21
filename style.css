@@ -52,11 +52,13 @@ ul {
 
 #depth,
 #restart,
+#reset,
 #about {
   position: absolute;
   top: 6rem;
   left: 2rem;
   width: 10rem;
+  text-wrap: nowrap;
   color: transparent;
   cursor: pointer;
   transition: 0.6s;
@@ -99,14 +101,21 @@ ul {
   top: 16rem;
 }
 
-#menu:hover > #about {
+#menu:hover > #reset {
   color: inherit;
   display: flex;
   top: 20rem;
 }
 
+#menu:hover > #about {
+  color: inherit;
+  display: flex;
+  top: 24rem;
+}
+
 #depth:hover,
 #restart:hover,
+#reset:hover,
 #about:hover {
   font-size: 1.8em;
 }

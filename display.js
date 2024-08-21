@@ -54,7 +54,10 @@ export class Display {
     const depthValue = document.getElementById("depth-value");
 
     const restart = document.getElementById("restart");
-    restart.addEventListener("click", (e) => game.restartGame());
+    restart.addEventListener("click", (e) => game.restartRound());
+
+    const reset = document.getElementById("reset");
+    reset.addEventListener("click", (e) => game.resetRound());
 
     //Scoreboard
     const computerScore = document.getElementById("computer-score");

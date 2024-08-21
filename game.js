@@ -6,6 +6,8 @@ const startingHands = {
   player: [1, 1],
 };
 
+const startingDelayMultiplier = 1200;
+
 export class Game {
   constructor(computerHands, playerHands, score, transpositionTable, depth) {
     this.computerHands = computerHands;
@@ -14,6 +16,7 @@ export class Game {
     this.display = new Display(this);
     this.transpositionTable = transpositionTable;
     this.depth = depth;
+    this.delay = startingDelayMultiplier;
   }
 
   handleSelectHand(event) {
@@ -66,7 +69,7 @@ export class Game {
       this.selectHand("computer", computerMove.sourceIndex);
       tapValue = computerMove.sourceValue;
       await this.showTapText("computer", tapValue);
-      await this.selectHand("player", computerMove.targetIndex, 2000);
+      await this.selectHand("player", computerMove.targetIndex, this.delay);
       await this.updateHandValue(
         this.playerHands,
         computerMove.targetIndex,
@@ -109,7 +112,7 @@ export class Game {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve();
-      }, 800);
+      }, this.delay);
     });
   }
 
@@ -120,7 +123,7 @@ export class Game {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve();
-      }, 800);
+      }, this.delay);
     });
   }
 
@@ -153,9 +156,9 @@ export class Game {
       this.updateScore();
       setTimeout(() => {
         this.clearTapText();
-        this.restartGame();
+        this.restartRound();
         resolve();
-      }, 2000);
+      }, 1.5 * this.delay);
     });
   }
 
@@ -223,8 +226,12 @@ export class Game {
         );
 
         resolve({ sourceValue, sourceIndex, targetValue, targetIndex });
-      }, 2200);
+      }, 1.5 * this.delay);
     });
+  }
+
+  updateDisplay() {
+    this.display.refreshHands(this.computerHands, this.playerHands);
   }
 
   //Menu helper functions
@@ -233,7 +240,7 @@ export class Game {
     this.display.gameScreenElements.depthValue.textContent = 2;
   }
 
-  restartGame() {
+  restartRound() {
     this.computerHands.forEach(
       (hand, index) => (hand.value = startingHands.computer[index])
     );
@@ -243,8 +250,12 @@ export class Game {
     this.updateDisplay();
   }
 
-  updateDisplay() {
-    this.display.refreshHands(this.computerHands, this.playerHands);
+  resetRound() {
+    this.score.computer = 0;
+    this.score.player = 0;
+    this.updateScore();
+    this.clearTapText();
+    this.restartRound();
   }
 
   //ScoreBoard functions
