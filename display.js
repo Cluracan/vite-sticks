@@ -6,31 +6,84 @@ import {
 
 export class Display {
   constructor(game) {
-    this.colorScheme =
+    this.handImages =
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-    console.log(this.colorScheme);
+        ? handImagesDark
+        : handImagesLight;
     const gameScreenElements = this.generateGameScreen(
+      game,
       game.computerHands,
       game.playerHands
     );
     this.gameScreenElements = gameScreenElements;
+    this.refreshHands(game.computerHands, game.playerHands);
   }
 
-  generateGameScreen(computerHands, playerHands) {
-    const computerLeft = document.getElementById("computer-left");
-    const computerRight = document.getElementById("computer-right");
-    const playerLeft = document.getElementById("player-left");
-    const playerRight = document.getElementById("player-right");
-    computerLeft.src = handImagesDark[computerHands[0]];
-    computerRight.src = handImagesDark[computerHands[1]];
-    playerLeft.src = handImagesDark[playerHands[0]];
-    playerRight.src = handImagesSelected[playerHands[1]];
-    // move src paths into 'refreshHands(computerHands, playerHands)
-    const tapText = document.getElementById("tapText");
+  generateGameScreen(game) {
+    //Game Content
+    const computerElements = [
+      document.getElementById("computer-left"),
+      document.getElementById("computer-right"),
+    ];
+    computerElements.forEach((element, index) => {
+      element.addEventListener("click", (e) => {
+        game.handleSelectHand({ type: "computer", index });
+      });
+    });
 
-    return { computerLeft, computerRight, playerLeft, playerRight, tapText };
+    const playerElements = [
+      document.getElementById("player-left"),
+      document.getElementById("player-right"),
+    ];
+    playerElements.forEach((element, index) => {
+      element.addEventListener("click", (e) => {
+        game.handleSelectHand({ type: "player", index });
+      });
+    });
+
+    const tapText = document.getElementById("tap-text");
+    tapText.textContent = "Testing tap info";
+
+    //Menu Options
+    const depthSlider = document.getElementById("depth-slider");
+    depthSlider.addEventListener("change", (e) =>
+      game.handleDepthChange(e.target.value)
+    );
+
+    const depthValue = document.getElementById("depth-value");
+
+    const restart = document.getElementById("restart");
+    restart.addEventListener("click", (e) => game.restartGame());
+
+    return {
+      computerElements,
+      playerElements,
+      tapText,
+      depthSlider,
+      depthValue,
+    };
+  }
+
+  refreshHands(computerHands, playerHands) {
+    this.gameScreenElements.computerElements.forEach((element, index) => {
+      if (computerHands[index].selected) {
+        element.src = handImagesSelected[computerHands[index].value];
+        element.classList = "selected";
+      } else {
+        element.src = this.handImages[computerHands[index].value];
+        element.classList = "";
+      }
+    });
+
+    this.gameScreenElements.playerElements.forEach((element, index) => {
+      if (playerHands[index].selected) {
+        element.src = handImagesSelected[playerHands[index].value];
+        element.classList = "selected";
+      } else {
+        element.src = this.handImages[playerHands[index].value];
+        element.classList = "";
+      }
+    });
   }
 }
