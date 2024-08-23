@@ -17,7 +17,6 @@ export class Display {
       game.playerHands
     );
     this.gameScreenElements = gameScreenElements;
-    this.refreshHands(game.computerHands, game.playerHands);
   }
 
   generateGameScreen(game) {
@@ -48,18 +47,18 @@ export class Display {
 
     //Menu Options
     const depthSlider = document.getElementById("depth-slider");
-    depthSlider.addEventListener("change", (e) =>
-      game.handleDepthChange(e.target.value)
-    );
-
     const depthValue = document.getElementById("depth-value");
 
-    const speedSlider = document.getElementById("speed-slider");
-    speedSlider.addEventListener("change", (e) =>
-      game.handleSpeedChange(e.target.value)
-    );
+    depthSlider.addEventListener("change", (e) => {
+      game.handleDepthChange(e.target.value);
+    });
 
-    const speedValue = document.getElementById("depth-value");
+    const speedSlider = document.getElementById("speed-slider");
+    const speedValue = document.getElementById("speed-value");
+
+    speedSlider.addEventListener("change", (e) => {
+      game.handleSpeedChange(e.target.value);
+    });
 
     const restart = document.getElementById("restart");
     restart.addEventListener("click", (e) => game.restartRound());

@@ -6,17 +6,38 @@ const startingHands = {
   player: [1, 1],
 };
 
-const startingDelay = 1000;
+function mapToObj(curMap) {
+  let obj = {};
+  for (let [key, value] of curMap) {
+    obj[key] = value;
+  }
+  return obj;
+}
+
+function objToMap(curObj) {
+  let result = new Map();
+  for (let key of Object.keys(curObj)) {
+    result.set(key, curObj[key]);
+  }
+  return result;
+}
 
 export class Game {
-  constructor(computerHands, playerHands, score, transpositionTable, depth) {
+  constructor(
+    computerHands,
+    playerHands,
+    score,
+    transpositionTable,
+    depth,
+    delay
+  ) {
     this.computerHands = computerHands;
     this.playerHands = playerHands;
     this.score = score;
     this.display = new Display(this);
     this.transpositionTable = transpositionTable;
     this.depth = depth;
-    this.delay = startingDelay;
+    this.delay = delay;
   }
 
   handleSelectHand(event) {
@@ -62,7 +83,7 @@ export class Game {
     this.clearTapText();
     this.updateDisplay();
     if (this.winCheck()) {
-      this.handleWin("player");
+      await this.handleWin("player");
     } else {
       //computer move
       const computerMove = await this.chooseMove();
@@ -79,8 +100,9 @@ export class Game {
       this.clearTapText();
       this.updateDisplay();
       if (this.winCheck()) {
-        this.handleWin("computer");
+        await this.handleWin("computer");
       }
+      this.saveData();
     }
   }
 
@@ -100,7 +122,6 @@ export class Game {
   }
 
   getTapValue(source) {
-    console.log(source);
     let sourceIndex = source.findIndex((hand) => hand.selected === true);
     return source[sourceIndex].value;
   }
@@ -176,29 +197,15 @@ export class Game {
         let playerInput = this.playerHands
           .map((hand) => hand.value)
           .filter((value) => value != 0);
-        console.log(
-          `computer filters ${JSON.stringify(
-            this.computerHands
-          )} into ${JSON.stringify(computerInput)}`
-        );
-        computerInput.forEach((sourceValue) => {
-          console.log(`here: ${sourceValue}`);
-        });
+
         computerInput.forEach((sourceValue, index, array) => {
-          console.log(
-            `trying ${sourceValue} ${index} ${JSON.stringify(array)}`
-          );
           playerInput.forEach((targetValue, targetIndex, targetArray) => {
             let newPlayerInput = targetArray.slice();
             newPlayerInput[targetIndex] = (targetValue + sourceValue) % 5;
             if (newPlayerInput[targetIndex] === 0) {
               newPlayerInput.splice(targetIndex, 1);
             }
-            console.log(
-              `tapping ${sourceValue} on ${JSON.stringify(
-                targetArray
-              )} to get ${JSON.stringify(newPlayerInput)}`
-            );
+
             let evaluateMove = -negamax(
               [newPlayerInput, computerInput.slice()],
               this.depth,
@@ -207,15 +214,14 @@ export class Game {
               1,
               this.transpositionTable
             );
-            console.log(`scores ${evaluateMove}`);
+
             if (evaluateMove > bestEvaluation) {
               bestEvaluation = evaluateMove;
               bestMove = { sourceValue, targetValue };
             }
           });
         });
-        console.log(computerInput);
-        console.log(`best move is ${JSON.stringify(bestMove)}`);
+
         let sourceValue = bestMove.sourceValue;
         let sourceIndex = this.computerHands.findIndex(
           (hand) => hand.value === sourceValue
@@ -232,6 +238,7 @@ export class Game {
 
   updateDisplay() {
     this.display.refreshHands(this.computerHands, this.playerHands);
+    this.updateScore();
   }
 
   //Menu helper functions
@@ -260,6 +267,7 @@ export class Game {
     this.updateScore();
     this.clearTapText();
     this.restartRound();
+    sessionStorage.clear();
   }
 
   //ScoreBoard functions
@@ -267,5 +275,35 @@ export class Game {
     this.display.gameScreenElements.computerScore.textContent =
       this.score.computer;
     this.display.gameScreenElements.playerScore.textContent = this.score.player;
+  }
+
+  //Save functions
+  saveData() {
+    let gameData = {
+      computerHands: this.computerHands,
+      playerHands: this.playerHands,
+      score: this.score,
+      transpositionTable: JSON.stringify(mapToObj(this.transpositionTable)),
+      depth: this.depth,
+      delay: this.delay,
+    };
+    sessionStorage.setItem("gameData", JSON.stringify(gameData));
+    sessionStorage.setItem("hasLoaded", true);
+  }
+
+  handleRefreshContent(gameData) {
+    this.computerHands = gameData.computerHands;
+    this.playerHands = gameData.playerHands;
+    this.score = gameData.score;
+    this.transpositionTable = objToMap(JSON.parse(gameData.transpositionTable));
+    this.depth = gameData.depth;
+    this.delay = gameData.delay;
+    this.updateScore();
+    this.updateDisplay();
+    this.display.gameScreenElements.depthSlider.value = this.depth;
+    this.display.gameScreenElements.depthValue.value = this.depth;
+    this.display.gameScreenElements.speedSlider.value = 10 - this.delay / 200;
+    this.display.gameScreenElements.speedValue.textContent =
+      10 - this.delay / 200;
   }
 }
